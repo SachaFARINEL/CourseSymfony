@@ -4,58 +4,59 @@ namespace App\Entity;
 
 use App\Repository\PropertyRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Cocur\Slugify\Slugify;
 
 #[ORM\Entity(repositoryClass: PropertyRepository::class)]
 class Property
 {
     const HEAT = [
-        0 => 'electric',
-        1 => 'gaz'
+        0 => 'Electrique',
+        1 => 'Gaz'
     ];
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $title;
+    private ?string $title;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private $description;
+    private ?string $description;
 
     #[ORM\Column(type: 'integer')]
-    private $surface;
+    private ?int $surface;
 
     #[ORM\Column(type: 'integer')]
-    private $rooms;
+    private ?int $rooms;
 
     #[ORM\Column(type: 'integer')]
-    private $bedrooms;
+    private ?int $bedrooms;
 
     #[ORM\Column(type: 'integer')]
-    private $floor;
+    private ?int $floor;
 
     #[ORM\Column(type: 'integer')]
-    private $price;
+    private ?int $price;
 
     #[ORM\Column(type: 'integer')]
-    private $heat;
+    private ?int $heat;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $city;
+    private ?string $city;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $address;
+    private ?string $address;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $postal_code;
+    private ?string $postal_code;
 
     #[ORM\Column(type: 'boolean', options: ["default" => false])]
-    private $sold = false;
+    private bool $sold = false;
 
     #[ORM\Column(type: 'datetime')]
-    private $created_at;
+    private \DateTime $created_at;
 
     public function __construct()
     {
@@ -77,6 +78,11 @@ class Property
         $this->title = $title;
 
         return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return (new Slugify())->slugify($this->title);
     }
 
     public function getDescription(): ?string
@@ -166,6 +172,11 @@ class Property
         $this->heat = $heat;
 
         return $this;
+    }
+
+    public function getHeatType(): string
+    {
+        return self::HEAT[$this->heat];
     }
 
     public function getCity(): ?string
