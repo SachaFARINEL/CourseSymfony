@@ -4,7 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Property;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use PhpParser\Node\Expr\Array_;
 
 /**
  * @extends ServiceEntityRepository<Property>
@@ -21,7 +23,30 @@ class PropertyRepository extends ServiceEntityRepository
         parent::__construct($registry, Property::class);
     }
 
-    public function add(Property $entity, bool $flush = false): void
+    /**
+     * @return Property[]
+     */
+    public function findAllVisible(): array
+    {
+        return $this->findVisibleQuery()
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Property[]
+     */
+    public
+    function findLastest(): array
+    {
+        return $this->findVisibleQuery()
+            ->setMaxResults(4)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public
+    function add(Property $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,13 +55,23 @@ class PropertyRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Property $entity, bool $flush = false): void
+    public
+    function remove(Property $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @return QueryBuilder
+     */
+    private function findVisibleQuery(): QueryBuilder
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.sold = false');
     }
 
 //    /**
