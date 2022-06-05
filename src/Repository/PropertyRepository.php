@@ -3,10 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Property;
+use App\Entity\PropertySearch;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Node\Expr\Array_;
 
 /**
  * @extends ServiceEntityRepository<Property>
@@ -24,20 +25,29 @@ class PropertyRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Property[]
+     * @param PropertySearch $search
+     * @return Query
      */
-    public function findAllVisible(): array
+    public function findAllVisibleQuery(PropertySearch $search): Query
     {
-        return $this->findVisibleQuery()
-            ->getQuery()
-            ->getResult();
+        $query = $this->findVisibleQuery();
+        if ($search->getMaxPrice()) {
+            $query = $query
+                ->andWhere('p.price <= :maxprice ')
+                ->setParameter('maxprice', $search->getMaxPrice());
+        }
+        if ($search->getMinSurface()) {
+            $query = $query
+                ->andWhere('p.surface >= :minsurface ')
+                ->setParameter('minsurface', $search->getMinSurface());
+        }
+        return $query->getQuery();
     }
 
     /**
      * @return Property[]
      */
-    public
-    function findLastest(): array
+    public function findLastest(): array
     {
         return $this->findVisibleQuery()
             ->setMaxResults(4)
@@ -45,8 +55,7 @@ class PropertyRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public
-    function add(Property $entity, bool $flush = false): void
+    public function add(Property $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -55,8 +64,7 @@ class PropertyRepository extends ServiceEntityRepository
         }
     }
 
-    public
-    function remove(Property $entity, bool $flush = false): void
+    public function remove(Property $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 

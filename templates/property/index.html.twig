@@ -3,10 +3,34 @@
 {% block title %}Property{% endblock %}
 
 {% block body %}
-    <div class="container">
-            <h1>Agence lorem ipsum</h1>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad aliquid aperiam, consectetur culpa
-                distinctio est facilis ipsam laboriosam libero nobis perferendis perspiciatis placeat quae quibusdam
-                repellat repudiandae sequi sint vero.</p>
+    <div class="mt-4 p-5 bg-light text-dark rounded text-center">
+        <div class="container">
+            {{ form_start(form) }}
+            <div class="row">
+                <div class="col">
+                    {{ form_row(form.minSurface) }}
+                </div>
+                <div class="col">
+                    {{ form_row(form.maxPrice) }}
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    <div class="container mt-4">
+        <h1>Tous nos biens</h1>
+        <div class="row">
+            {% for property in properties %}
+                <div class="col-md-4">
+                    {{ include('property/_property.html.twig') }}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="pagination justify-content-center">
+            {{ knp_pagination_render(properties) }}
+        </div>
     </div>
 {% endblock %}
