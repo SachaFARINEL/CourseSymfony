@@ -1,4 +1,5 @@
 Title : Libelle
+Surface : Surface
 Price : Prix
 Rooms : Pièces
 Bedrooms : Chambres
@@ -8,3 +9,6 @@ Address: Adresse
 City: Ville
 Postal code : Code Postal
 Sold : Vendu
+Description : Description
+Électrique : Électrique
+Gaz : Gaz
