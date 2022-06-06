@@ -65,6 +65,7 @@ class AdminPropertyController extends AbstractController
     {
         $form = $this->createForm(PropertyType::class, $property);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $doctrine->getManager();
             $entityManager->flush();
@@ -80,6 +81,8 @@ class AdminPropertyController extends AbstractController
     /**
      * @param Property $property
      * @param ManagerRegistry $doctrine
+     * @param Request $request
+     * @return Response
      */
     #[Route('/admin/property/{id}', name: 'admin.property.delete', methods: "DELETE")]
     public function delete(Property $property, ManagerRegistry $doctrine, Request $request): Response
