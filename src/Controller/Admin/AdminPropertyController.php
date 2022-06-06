@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Admin;
 
 use App\Entity\Property;
 use App\Form\PropertyType;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class AdminController extends AbstractController
+class AdminPropertyController extends AbstractController
 {
     private PropertyRepository $repository;
 
@@ -27,7 +27,7 @@ class AdminController extends AbstractController
     public function index(): Response
     {
         $properties = $this->repository->findAll();
-        return $this->render('admin/index.html.twig', compact('properties'));
+        return $this->render('admin/property/index.html.twig', compact('properties'));
     }
 
     /**
@@ -48,7 +48,7 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'Bien crée avec succès');
             return $this->redirectToRoute('admin.property.index');
         }
-        return $this->render('admin/new.html.twig', [
+        return $this->render('admin/property/new.html.twig', [
             'property' => $property,
             'form' => $form->createView()
         ]);
@@ -71,7 +71,7 @@ class AdminController extends AbstractController
             $this->addFlash('success', 'Bien modifié avec succès');
             return $this->redirectToRoute('admin.property.index');
         }
-        return $this->render('admin/edit.html.twig', [
+        return $this->render('admin/property/edit.html.twig', [
             'property' => $property,
             'form' => $form->createView()
         ]);
